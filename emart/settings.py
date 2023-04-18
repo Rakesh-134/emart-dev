@@ -121,20 +121,18 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR/'static'
-#MEDIA_URL  , MEDIA_ROOT -->iske bad APP--> ka url.py me Settings,static,path
-#add karte hai tabhi upload_image --> ka submition work karega
-MEDIA_URL='/media/'
-MEDIA_ROOT= BASE_DIR/'media/uploads'
+# MEDIA_URL  , MEDIA_ROOT -->iske bad APP--> ka url.py me Settings,static,path
+# add karte hai tabhi upload_image --> ka submition work karega
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR/'media'
 # login karte wquit accounts/profile me na jakar --> sirf (profile ) url me jaye to uske liye
-#login redirect url define karna padega --> profile page ka
+# login redirect url define karna padega --> profile page ka
 # ab error nahi dega
-LOGIN_REDIRECT_URL='/profile/'
-#iske bad hume karna hai (Rakesh) humesa dikh raha  jo ki login ke bad dikhna chahiye
-#Cart --> bhi hamara public nahi rahega(login ke bad dikhna chahiye)
+LOGIN_REDIRECT_URL = '/profile/'
+# iske bad hume karna hai (Rakesh) humesa dikh raha  jo ki login ke bad dikhna chahiye
+# Cart --> bhi hamara public nahi rahega(login ke bad dikhna chahiye)
 # (Login) and (Registration) Login ke pahle dikhna chahiye ye 3 kam karna hai
-#base.html -->se karenge (navigation bar humara yaha hai)
-LOGOUT_REDIRECT_URL='login'
+# base.html -->se karenge (navigation bar humara yaha hai)
+LOGOUT_REDIRECT_URL = 'login'
 # ye Terminal me Link provide karta hai Password Reset ke liye
-EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
-
-
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
