@@ -124,7 +124,7 @@ STATIC_ROOT = BASE_DIR/'static'
 #MEDIA_URL  , MEDIA_ROOT -->iske bad APP--> ka url.py me Settings,static,path
 #add karte hai tabhi upload_image --> ka submition work karega
 MEDIA_URL='/media/'
-MEDIA_ROOT= BASE_DIR/'media'
+MEDIA_ROOT= BASE_DIR/'media/uploads'
 # login karte wquit accounts/profile me na jakar --> sirf (profile ) url me jaye to uske liye
 #login redirect url define karna padega --> profile page ka
 # ab error nahi dega
