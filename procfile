@@ -1,1 +1,0 @@
-web: gunicorn emart.wsgi --log-file -
