@@ -14,23 +14,34 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 
+def get_items_count_in_cart(request):
+    totalitem = 0
+    if request.user.is_authenticated:
+        cart = Cart.objects.filter(user=request.user)
+        for b in cart:
+            totalitem += b.quantity
+    return totalitem
+
+
 class ProductView(View):
     def get(self, request):
+        totalitem = get_items_count_in_cart(request)
         topwears = Product.objects.filter(category='TW')
         bottomwears = Product.objects.filter(category='BW')
         mobiles = Product.objects.filter(category='M')
-        return render(request, 'app/home.html', {'topwears': topwears, 'bottomwears': bottomwears, 'mobiles': mobiles})
+        return render(request, 'app/home.html', {'topwears': topwears, 'bottomwears': bottomwears, 'mobiles': mobiles, 'totalitem': totalitem})
 
 
 class ProductDetailView(View):
     def get(self, request, pk):
+        totalitem = get_items_count_in_cart(request)
         product = Product.objects.get(pk=pk)
         item_already_in_cart = False
         if request.user.is_authenticated:
             item_already_in_cart = Cart.objects.filter(
                 Q(product=product.id) & Q(user=request.user)).exists()
 
-        return render(request, 'app/productdetail.html', {'product': product, 'item_already_in_cart': item_already_in_cart})
+        return render(request, 'app/productdetail.html', {'product': product, 'item_already_in_cart': item_already_in_cart, 'totalitem': totalitem})
 
 
 @login_required
@@ -46,6 +57,7 @@ def add_to_cart(request):
 
 @login_required
 def show_cart(request):
+    totalitem = get_items_count_in_cart(request)
     if request.user.is_authenticated:
         user = request.user
         cart = Cart.objects.filter(user=user)
@@ -60,7 +72,7 @@ def show_cart(request):
                 tempamount = (p.quantity*p.product.discounted_price)
                 amount += tempamount
                 total_amount = amount+shipping_amount
-            return render(request, 'app/addtocart.html', {'carts': cart, 'total_amount': total_amount, 'amount': amount})
+            return render(request, 'app/addtocart.html', {'carts': cart, 'total_amount': total_amount, 'amount': amount, 'totalitem': totalitem})
         else:
             return render(request, 'app/emptycart.html')
 
@@ -169,6 +181,20 @@ def mobile(request, data=None):
 
     return render(request, 'app/mobile.html', {'mobiles': mobiles})
 
+
+def laptop(request, data=None):
+    if data == None:
+        laptop = Product.objects.filter(category='L')
+    elif data == 'Hp' or data == 'Apple':
+        laptop = Product.objects.filter(category='L').filter(brand=data)
+    elif data == 'below':
+        laptop = Product.objects.filter(
+            category='M').filter(discounted_price__lt=45000)
+    elif data == 'above':
+        laptop = Product.objects.filter(
+            category='M').filter(discounted_price__gt=45000)
+    return render(request, 'app/laptop.html', {'laptop': laptop})
+
 # Loginview ka yaha koi kam nahi hai kyoki django me bydefault-->LoginView hota hai-->auth_views me
 
 # def login(request):
@@ -216,7 +242,7 @@ class ProfileView(View):
             state = form.cleaned_data['state']
             zipcode = form.cleaned_data['zipcode']
             reg = Customer(user=usr, name=name, locality=locality,
-            city=city, state=state, zipcode=zipcode)
+                           city=city, state=state, zipcode=zipcode)
             reg.save()
             messages.success(
                 request, 'Congratulations!! Profile Updated Successfully')
